@@ -1,107 +1,33 @@
+// config/app/app_theme.dart
 import 'package:flutter/material.dart';
-import '../config/theme/colors.dart';
-import '../config/theme/spacing.dart';
-import '../config/theme/shapes.dart';
-import '../config/theme/typography.dart';
+import 'package:strixcam/config/theme/colors.dart';
+import 'package:strixcam/config/theme/typography.dart';
 
 final class AppTheme {
   AppTheme._();
 
-  static ThemeData light = _build(brightness: Brightness.light);
-  static ThemeData dark = _build(brightness: Brightness.dark);
+  static ThemeData light = _build(colorScheme: AppColors.lightScheme);
+  static ThemeData dark = _build(colorScheme: AppColors.darkScheme);
 
-  static ThemeData _build({required Brightness brightness}) {
-    final scheme = brightness == Brightness.dark
-        ? AppColors.darkScheme
-        : AppColors.lightScheme;
-
-    final text = buildTextTheme(scheme);
+  static ThemeData _build({required ColorScheme colorScheme}) {
+    final text = AppTypography.build(colorScheme);
 
     return ThemeData(
       useMaterial3: true,
-      colorScheme: scheme,
+      colorScheme: colorScheme,
       textTheme: text,
-      visualDensity: VisualDensity.standard,
-
-      appBarTheme: AppBarTheme(
-        elevation: 0,
-        backgroundColor: scheme.surface,
-        foregroundColor: scheme.onSurface,
-        centerTitle: false,
-        titleTextStyle: text.titleLarge,
-      ),
-
-      cardTheme: CardThemeData(
-        margin: EdgeInsets.zero,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Corners.lg),
-        ),
-      ),
 
       navigationBarTheme: NavigationBarThemeData(
-        height: 70,
-        backgroundColor: scheme.surface,
-        indicatorColor: scheme.primary.withOpacity(0.12),
-        labelTextStyle: WidgetStatePropertyAll(text.labelMedium),
-      ),
-
-      filledButtonTheme: FilledButtonThemeData(
-        style: FilledButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Corners.md),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: Insets.lg,
-            vertical: Insets.sm,
-          ),
-        ),
-      ),
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Corners.md),
-          ),
-          side: BorderSide(color: scheme.outline),
-          padding: const EdgeInsets.symmetric(
-            horizontal: Insets.lg,
-            vertical: Insets.sm,
-          ),
-        ),
-      ),
-
-      inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(Corners.md),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: Insets.lg,
-          vertical: Insets.sm,
-        ),
-      ),
-
-      dividerTheme: DividerThemeData(
-        color: scheme.outlineVariant,
-        thickness: 1,
-        space: Insets.lg,
-      ),
-
-      snackBarTheme: SnackBarThemeData(
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: scheme.inverseSurface,
-        contentTextStyle: text.bodyMedium?.copyWith(
-          color: scheme.onInverseSurface,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(Corners.md),
-        ),
-      ),
-      tooltipTheme: TooltipThemeData(
-        decoration: BoxDecoration(
-          color: scheme.inverseSurface,
-          borderRadius: BorderRadius.circular(Corners.sm),
-        ),
-        textStyle: text.labelSmall?.copyWith(color: scheme.onInverseSurface),
+        height: 50,
+        backgroundColor: colorScheme.surface,
+        indicatorColor: colorScheme.primary.withValues(alpha: 0.14),
+        iconTheme: WidgetStateProperty.resolveWith<IconThemeData?>((states) {
+          final sel = states.contains(WidgetState.selected);
+          return IconThemeData(
+            color: sel ? colorScheme.primary : colorScheme.onSurfaceVariant,
+            size: 25,
+          );
+        }),
       ),
     );
   }

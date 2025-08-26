@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:strixcam/core/components/app_nav_bar.dart';
 import 'app/app_theme.dart';
-import 'app/app_router.dart';
-import 'app/app_routes.dart';
 
 void main() {
-  runApp(
-    MaterialApp(
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
-      initialRoute: AppRoutes.home,
-      onGenerateRoute: AppRouter.onGenerateRoute,
-    ),
-  );
+      home: AppNavBar(),
+    );
+  }
 }

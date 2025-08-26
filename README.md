@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# sc-fe-app-mobile
-=======
 # strixcam
 
 A new Flutter project.
@@ -17,4 +14,3 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
->>>>>>> 5b5b945 (Add Windows runner files for Flutter application)
