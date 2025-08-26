@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'device_scanner.dart';
+import 'device_scanner_page.dart';
 
 enum SettingsItem {
   bluetoothDevices,

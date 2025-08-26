@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:strixcam/core/components/app_nav_bar.dart';
-import 'app/app_theme.dart';
+import '../core/components/app_nav_bar.dart';
+import '../app/app_theme.dart';
 
 void main() {
   runApp(MyApp());

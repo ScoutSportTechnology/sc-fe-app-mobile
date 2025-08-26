@@ -1,4 +1,4 @@
-package com.example.strixcam
+package com.example.Scout
 
 import io.flutter.embedding.android.FlutterActivity
 

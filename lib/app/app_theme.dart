@@ -1,7 +1,7 @@
 // config/app/app_theme.dart
 import 'package:flutter/material.dart';
-import 'package:strixcam/config/theme/colors.dart';
-import 'package:strixcam/config/theme/typography.dart';
+import '../config/theme/colors.dart';
+import '../config/theme/typography.dart';
 
 final class AppTheme {
   AppTheme._();
@@ -18,14 +18,14 @@ final class AppTheme {
       textTheme: text,
 
       navigationBarTheme: NavigationBarThemeData(
-        height: 50,
+        height: 100,
         backgroundColor: colorScheme.surface,
         indicatorColor: colorScheme.primary.withValues(alpha: 0.14),
         iconTheme: WidgetStateProperty.resolveWith<IconThemeData?>((states) {
           final sel = states.contains(WidgetState.selected);
           return IconThemeData(
             color: sel ? colorScheme.primary : colorScheme.onSurfaceVariant,
-            size: 25,
+            size: 35,
           );
         }),
       ),

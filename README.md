@@ -1,4 +1,4 @@
-# strixcam
+# Scout
 
 A new Flutter project.
 

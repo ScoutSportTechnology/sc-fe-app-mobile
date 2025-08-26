@@ -1,76 +1,77 @@
 import 'package:flutter/material.dart';
-import '../pages/device_scanner.dart' show MockDevice;
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
+/// Presentational card for a BLE device (no BLE logic inside).
+/// - Pass a ScanResult from flutter_blue_plus
+/// - Pass connection & saved flags from your page state
+/// - Provide a single onConnectToggle callback
 class DeviceTile extends StatelessWidget {
   const DeviceTile({
     super.key,
-    required this.device,
+    required this.result,
+    required this.isConnected,
+    required this.isSaved,
     required this.onConnectToggle,
-    required this.onMore,
   });
 
-  final MockDevice device;
+  final ScanResult result;
+  final bool isConnected;
+  final bool isSaved;
   final VoidCallback onConnectToggle;
-  final VoidCallback onMore;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
+    final name = _deviceName(result);
+    final id = result.device.remoteId.str; // stable identifier
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        leading: _Avatar(rssi: device.rssi),
-        title: Text(device.name),
-        subtitle: Text('${device.id}  •  ${_signalLabel(device.rssi)}'),
-        trailing: Wrap(
-          spacing: 4,
-          children: [
-            FilledButton.tonal(
-              onPressed: onConnectToggle,
-              child: Text(device.connected ? 'Disconnect' : 'Connect'),
-            ),
-            IconButton(
-              onPressed: onMore,
-              icon: const Icon(Icons.more_vert),
-              tooltip: 'More',
-            ),
-          ],
+        leading: _StatusAvatar(isConnected: isConnected, isSaved: isSaved),
+        title: Text(name),
+        subtitle: Text(id),
+        trailing: FilledButton.tonal(
+          onPressed: onConnectToggle,
+          child: Text(isConnected ? 'Disconnect' : 'Connect'),
         ),
       ),
     );
   }
 
-  String _signalLabel(int rssi) {
-    if (rssi >= -55) return 'Signal: Excellent';
-    if (rssi >= -65) return 'Signal: Good';
-    if (rssi >= -75) return 'Signal: Fair';
-    return 'Signal: Weak';
+  String _deviceName(ScanResult r) {
+    final advName = r.advertisementData.advName;
+    if (advName.isNotEmpty) return advName;
+    // Fallback: some devices don’t broadcast a name
+    return 'Unknown';
   }
 }
 
-class _Avatar extends StatelessWidget {
-  const _Avatar({required this.rssi});
-  final int rssi;
+class _StatusAvatar extends StatelessWidget {
+  const _StatusAvatar({required this.isConnected, required this.isSaved});
+  final bool isConnected;
+  final bool isSaved;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final base = scheme.primary;
-    final shade = base.withValues(alpha: 0.12);
-    return CircleAvatar(
-      backgroundColor: shade,
-      foregroundColor: base,
-      child: Icon(_iconForRssi(rssi)),
-    );
-  }
 
-  IconData _iconForRssi(int rssi) {
-    if (rssi >= -55) return Icons.network_wifi_3_bar; // strongest
-    if (rssi >= -65) return Icons.network_wifi_2_bar;
-    if (rssi >= -75) return Icons.network_wifi_1_bar;
-    return Icons.network_wifi_1_bar_sharp; // weakest-ish
+    // Choose icon based on state
+    final IconData icon = isConnected
+        ? Icons.bluetooth_connected
+        : (isSaved ? Icons.bluetooth_disabled : Icons.videocam);
+
+    // Subtle tint for the circle background; stronger when connected
+    final bg = isConnected
+        ? scheme.primary.withValues(alpha: 0.18)
+        : scheme.onSurfaceVariant.withValues(alpha: 0.10);
+
+    final fg = isConnected ? scheme.primary : scheme.onSurfaceVariant;
+
+    return CircleAvatar(
+      backgroundColor: bg,
+      foregroundColor: fg,
+      child: Icon(icon),
+    );
   }
 }
