@@ -1,4 +1,4 @@
-# Scout
+# Scout Camera
 
 A new Flutter project.
 

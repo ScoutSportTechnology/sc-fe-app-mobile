@@ -1,6 +1,6 @@
 {
-  "name": "Scout",
-  "short_name": "Scout",
+  "name": "Scout Camera",
+  "short_name": "Scout Camera",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",
