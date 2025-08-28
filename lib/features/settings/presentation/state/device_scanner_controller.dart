@@ -31,12 +31,15 @@ class DeviceScannerController {
     _resultsSub = FlutterBluePlus.onScanResults.listen((batch) {
       final next = Map<String, ScanResult>.from(state.value.devices);
       for (final r in batch) {
-        next[r.device.remoteId.str] = r;
+        if (r.advertisementData.connectable) {
+          next[r.device.remoteId.str] = r;
+        }
       }
       _set(state.value.copyWith(devices: next));
     });
 
     await _checkPermissions();
+    await _seedConnected();
   }
 
   Future<void> dispose() async {
@@ -87,7 +90,9 @@ class DeviceScannerController {
     _set(st.copyWith(busy: nextBusy));
 
     try {
-      final device = state.value.devices[remoteId]?.device;
+      final device =
+          state.value.devices[remoteId]?.device ??
+          await _findKnownDevice(remoteId);
       if (device == null) {
         _set(
           state.value.copyWith(
@@ -99,12 +104,15 @@ class DeviceScannerController {
       }
 
       final current = await device.connectionState.first;
+
       if (current == BluetoothConnectionState.connected) {
         await device.disconnect();
         final nextConnected = Set<String>.from(state.value.connected)
           ..remove(remoteId);
         _set(state.value.copyWith(connected: nextConnected));
       } else {
+        await _stopScan();
+
         _connectionSubs[remoteId]?.cancel();
         final sub = device.connectionState.listen((s) {
           if (s == BluetoothConnectionState.disconnected) {
@@ -117,6 +125,7 @@ class DeviceScannerController {
         device.cancelWhenDisconnected(sub, delayed: true, next: true);
 
         await device.connect(autoConnect: false);
+
         final nextConnected = Set<String>.from(state.value.connected)
           ..add(remoteId);
         _set(state.value.copyWith(connected: nextConnected));
@@ -132,10 +141,6 @@ class DeviceScannerController {
 
   void updateQuery(String text) {
     _set(state.value.copyWith(query: text));
-  }
-
-  Future<void> openAppSettings() async {
-    await openAppSettings();
   }
 
   Future<void> _startScan() async {
@@ -162,14 +167,6 @@ class DeviceScannerController {
       final l = await Permission.locationWhenInUse.status;
 
       final granted = (s.isGranted && c.isGranted) || l.isGranted;
-      final denied =
-          s.isDenied ||
-          c.isDenied ||
-          l.isDenied ||
-          (!granted &&
-              !l.isPermanentlyDenied &&
-              !s.isPermanentlyDenied &&
-              !c.isPermanentlyDenied);
       final permDenied =
           s.isPermanentlyDenied ||
           c.isPermanentlyDenied ||
@@ -179,15 +176,44 @@ class DeviceScannerController {
         status = PermissionGateStatus.granted;
       } else if (permDenied) {
         status = PermissionGateStatus.permanentlyDenied;
-      } else if (denied) {
-        status = PermissionGateStatus.denied;
       } else {
-        status = PermissionGateStatus.unknown;
+        status = PermissionGateStatus.denied;
       }
     } else {
       status = PermissionGateStatus.granted;
     }
     _set(state.value.copyWith(permission: status));
+  }
+
+  Future<void> _seedConnected() async {
+    try {
+      final List<BluetoothDevice> list = await FlutterBluePlus.connectedDevices;
+      final ids = list.map((d) => d.remoteId.str).toSet();
+      _set(state.value.copyWith(connected: ids));
+      for (final d in list) {
+        final id = d.remoteId.str;
+        _connectionSubs[id]?.cancel();
+        final sub = d.connectionState.listen((s) {
+          if (s == BluetoothConnectionState.disconnected) {
+            final now = state.value;
+            final nc = Set<String>.from(now.connected)..remove(id);
+            _set(now.copyWith(connected: nc));
+          }
+        });
+        _connectionSubs[id] = sub;
+        d.cancelWhenDisconnected(sub, delayed: true, next: true);
+      }
+    } catch (_) {}
+  }
+
+  Future<BluetoothDevice?> _findKnownDevice(String remoteId) async {
+    try {
+      final list = await FlutterBluePlus.connectedDevices;
+      for (final d in list) {
+        if (d.remoteId.str == remoteId) return d;
+      }
+    } catch (_) {}
+    return null;
   }
 
   void _set(DeviceScannerState next) {
