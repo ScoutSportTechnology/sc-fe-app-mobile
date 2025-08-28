@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'device_scanner_page.dart';
+import '../../../features/device_link/presentation/pages/device_scanner_page.dart';
 
 enum SettingsItem {
   bluetoothDevices,
@@ -71,11 +71,10 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: _order.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 8),
+        separatorBuilder: (_, _) => const SizedBox(height: 8),
         itemBuilder: (context, index) {
           final item = _order[index];
           final settingsItem = _settingsItems[item];

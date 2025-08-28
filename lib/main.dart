@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/components/app_nav_bar.dart';
+import 'app/app_nav_bar.dart';
 import '../app/app_theme.dart';
 
 void main() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/settings/presentation/pages/setting_page.dart';
+import 'presentation/pages/home_page.dart';
+import 'presentation/pages/setting_page.dart';
 
 enum AppTab { home, recorded, stream, scoreboard, settings }
 

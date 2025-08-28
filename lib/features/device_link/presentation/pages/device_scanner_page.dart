@@ -4,10 +4,10 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../state/device_scanner_controller.dart';
 import '../state/device_scanner_state.dart';
-import '../widgets/device_tile.dart';
-import '../widgets/permission_banner.dart';
-import '../widgets/bluetooth_off_dialog.dart';
-import '../widgets/device_not_found.dart';
+import '../state/device_tile.dart';
+import '../../../../core/components/permission_banner.dart';
+import '../state/bluetooth_off_dialog.dart';
+import '../state/device_not_found.dart';
 
 class DeviceScannerPage extends StatefulWidget {
   const DeviceScannerPage({super.key});
