@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
-/// Compact design tokens + builder in one place.
 final class AppTypography {
   AppTypography._();
 
-  // Fonts (hook up later via pubspec if you want custom families)
-  static const String? primary = null; // e.g. 'Inter'
-  static const String? mono = null; // e.g. 'JetBrainsMono'
+  static const String? primary = null;
+  static const String? mono = null;
 
-  // Sizes
   static const double _xs = 11,
       _sm = 12,
       _md = 14,
@@ -26,7 +23,7 @@ final class AppTypography {
       bodyColor: scheme.onSurface,
     );
 
-    TextStyle _s(
+    TextStyle s(
       TextStyle? t,
       double sz,
       FontWeight w, {
@@ -38,30 +35,25 @@ final class AppTypography {
     );
 
     return base.copyWith(
-      // Display
-      displayLarge: _s(base.displayLarge, _d3, FontWeight.w700),
-      displayMedium: _s(base.displayMedium, _d2, FontWeight.w700),
-      displaySmall: _s(base.displaySmall, _d1, FontWeight.w700),
+      displayLarge: s(base.displayLarge, _d3, FontWeight.w700),
+      displayMedium: s(base.displayMedium, _d2, FontWeight.w700),
+      displaySmall: s(base.displaySmall, _d1, FontWeight.w700),
+      
+      headlineLarge: s(base.headlineLarge, _h1, FontWeight.w700),
+      headlineMedium: s(base.headlineMedium, _h2, FontWeight.w600),
+      headlineSmall: s(base.headlineSmall, _h3, FontWeight.w600),
 
-      // Headlines
-      headlineLarge: _s(base.headlineLarge, _h1, FontWeight.w700),
-      headlineMedium: _s(base.headlineMedium, _h2, FontWeight.w600),
-      headlineSmall: _s(base.headlineSmall, _h3, FontWeight.w600),
+      titleLarge: s(base.titleLarge, _lg, FontWeight.w600),
+      titleMedium: s(base.titleMedium, _md, FontWeight.w600),
+      titleSmall: s(base.titleSmall, _sm, FontWeight.w600),
 
-      // Titles
-      titleLarge: _s(base.titleLarge, _lg, FontWeight.w600),
-      titleMedium: _s(base.titleMedium, _md, FontWeight.w600),
-      titleSmall: _s(base.titleSmall, _sm, FontWeight.w600),
+      bodyLarge: s(base.bodyLarge, _lg, FontWeight.w400),
+      bodyMedium: s(base.bodyMedium, _md, FontWeight.w400),
+      bodySmall: s(base.bodySmall, _sm, FontWeight.w400),
 
-      // Body
-      bodyLarge: _s(base.bodyLarge, _lg, FontWeight.w400),
-      bodyMedium: _s(base.bodyMedium, _md, FontWeight.w400),
-      bodySmall: _s(base.bodySmall, _sm, FontWeight.w400),
-
-      // Labels (kept a touch smaller for nav/buttons)
-      labelLarge: _s(base.labelLarge, _md, FontWeight.w600),
-      labelMedium: _s(base.labelMedium, _sm, FontWeight.w600),
-      labelSmall: _s(base.labelSmall, _xs, FontWeight.w600),
+      labelLarge: s(base.labelLarge, _md, FontWeight.w600),
+      labelMedium: s(base.labelMedium, _sm, FontWeight.w600),
+      labelSmall: s(base.labelSmall, _xs, FontWeight.w600),
     );
   }
 }

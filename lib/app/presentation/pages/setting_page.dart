@@ -64,31 +64,62 @@ final Map<SettingsItem, SettingRowItem> _settingsItems = {
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  SettingsPageState createState() => SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final text = theme.textTheme;
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    );
+
     return Scaffold(
-      body: ListView.separated(
-        padding: const EdgeInsets.all(16),
-        itemCount: _order.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 8),
-        itemBuilder: (context, index) {
-          final item = _order[index];
-          final settingsItem = _settingsItems[item];
-          return ListTile(
-            leading: Icon(settingsItem!.icon),
-            title: Text(settingsItem.label),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => settingsItem.page),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: List.generate(_order.length, (i) {
+              final item = _order[i];
+              final row = _settingsItems[item]!;
+              final tile = Material(
+                color: theme.colorScheme.surfaceContainerLow,
+                shape: shape,
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  customBorder: shape,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => row.page),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 14,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(row.icon, color: theme.colorScheme.onSurface),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(row.label, style: text.titleMedium),
+                        ),
+                        const Icon(Icons.chevron_right),
+                      ],
+                    ),
+                  ),
+                ),
               );
-            },
-          );
-        },
+              return i == _order.length - 1
+                  ? tile
+                  : Column(children: [tile, const SizedBox(height: 8)]);
+            }),
+          ),
+        ),
       ),
     );
   }

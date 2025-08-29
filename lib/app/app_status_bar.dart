@@ -168,7 +168,7 @@ class _IndicatorDot extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.4),
+            color: color.withValues(alpha: 0.6),
             blurRadius: 6,
             spreadRadius: 1,
           ),

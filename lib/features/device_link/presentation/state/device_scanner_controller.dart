@@ -187,7 +187,7 @@ class DeviceScannerController {
 
   Future<void> _seedConnected() async {
     try {
-      final List<BluetoothDevice> list = await FlutterBluePlus.connectedDevices;
+      final List<BluetoothDevice> list = FlutterBluePlus.connectedDevices;
       final ids = list.map((d) => d.remoteId.str).toSet();
       _set(state.value.copyWith(connected: ids));
       for (final d in list) {
@@ -208,7 +208,7 @@ class DeviceScannerController {
 
   Future<BluetoothDevice?> _findKnownDevice(String remoteId) async {
     try {
-      final list = await FlutterBluePlus.connectedDevices;
+      final list = FlutterBluePlus.connectedDevices;
       for (final d in list) {
         if (d.remoteId.str == remoteId) return d;
       }
