@@ -57,12 +57,11 @@ final Map<AppTab, NavItem> _navItems = {
 
 class AppNavBar extends StatefulWidget {
   const AppNavBar({super.key});
-
   @override
-  State<AppNavBar> createState() => _AppNavBarState();
+  AppNavBarState createState() => AppNavBarState();
 }
 
-class _AppNavBarState extends State<AppNavBar> {
+class AppNavBarState extends State<AppNavBar> {
   int index = 2;
 
   @override
@@ -76,14 +75,15 @@ class _AppNavBarState extends State<AppNavBar> {
         selectedIndex: index,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         onDestinationSelected: (i) => setState(() => index = i),
-        destinations: [
-          for (final tab in _tabOrder)
-            NavigationDestination(
-              icon: Icon(_navItems[tab]!.icon),
-              selectedIcon: Icon(_navItems[tab]!.selectedIcon),
-              label: _navItems[tab]!.label,
-            ),
-        ],
+        destinations: _tabOrder
+            .map(
+              (tab) => NavigationDestination(
+                icon: Icon(_navItems[tab]!.icon),
+                selectedIcon: Icon(_navItems[tab]!.selectedIcon),
+                label: _navItems[tab]!.label,
+              ),
+            )
+            .toList(),
       ),
     );
   }

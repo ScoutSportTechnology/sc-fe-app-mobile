@@ -82,41 +82,42 @@ class SettingsPageState extends State<SettingsPage> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: List.generate(_order.length, (i) {
-              final item = _order[i];
-              final row = _settingsItems[item]!;
-              final tile = Material(
-                color: theme.colorScheme.surfaceContainerLow,
-                shape: shape,
-                clipBehavior: Clip.antiAlias,
-                child: InkWell(
-                  customBorder: shape,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => row.page),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 14,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(row.icon, color: theme.colorScheme.onSurface),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(row.label, style: text.titleMedium),
+              final item = _settingsItems[_order[i]]!;
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: Material(
+                  color: theme.colorScheme.surfaceContainerLow,
+                  shape: shape,
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    customBorder: shape,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Scaffold(body: item.page),
                         ),
-                        const Icon(Icons.chevron_right),
-                      ],
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 14,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(item.icon, color: theme.colorScheme.onSurface),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: Text(item.label, style: text.titleMedium),
+                          ),
+                          const Icon(Icons.chevron_right),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               );
-              return i == _order.length - 1
-                  ? tile
-                  : Column(children: [tile, const SizedBox(height: 8)]);
             }),
           ),
         ),
